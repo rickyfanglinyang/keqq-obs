@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import logging
+
 
 
 class KeSpider(scrapy.Spider):
@@ -8,5 +10,10 @@ class KeSpider(scrapy.Spider):
     start_urls = ['http://ke.qq.com/']
 
     def parse(self, response):
-        print(response.body.decode('utf-8', 'ignore'))
-        
+        result = response.body.decode('utf-8', 'ignore')
+        # print(result)
+        logging.log(logging.WARNING, "----" * 200)
+        logging.log(logging.WARNING, "###: " + result)
+        logging.log(logging.WARNING, "----" * 200)
+        # result = response.xpath("//h4[@class='item-tt']/a[@class='item-tt-link']/text()").extract()
+        # print('#####', result)
