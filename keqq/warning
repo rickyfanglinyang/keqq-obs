@@ -1,0 +1,2 @@
+when use [ git clone git@github.com:rickyfanglinyang/keqq-obs.git
+] only get part of the code in local disk.  not sure why.
