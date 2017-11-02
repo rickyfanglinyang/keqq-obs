@@ -2,7 +2,7 @@
 import scrapy
 import logging
 from scrapy.http import Request
-# from lxml import etree
+from keqq.items import KeqqItem
 
 
 
@@ -43,13 +43,14 @@ class KeSpider(scrapy.Spider):
             sold_count  = course.xpath("./div[@class='item-line item-line--middle']/span[@class='line-cell item-user']/text()").extract_first()
             price  = course.xpath("./div[@class='item-line item-line--bottom']/span[@class='line-cell item-price']/text()").extract_first()
             sold_by  = course.xpath("./div[@class='item-line item-line--middle']/span[@class='item-source']/a[@class='item-source-link']/text()").extract_first()
-            link = course.xpath("./a/@href").extract_first()
+            link = "https:" + str(course.xpath("./a/@href").extract_first()).strip() # Remove space in front and end of the link
 
-
+            #For Debug purpose #
             print("course_name ##: ", course_name)
             print("sold_count ##: ", sold_count)
             print("price ##: ", price)
             print("sold_by ##: ", sold_by)
+            print("link ##: ", link)
 
             a_course = []
             a_course.append(course_name)
@@ -63,6 +64,21 @@ class KeSpider(scrapy.Spider):
             logging.log(logging.WARNING, "----" * 100)
 
             list_courses.append(a_course)
+            #For Debug purpose #
+            item = KeqqItem()
+            item["course_name"] = course_name
+            item["sold_count"] = sold_count
+            item["price"] = price
+            item["sold_by"] = sold_by
+            item["link"] = link
+
+
+
+            yield Request(url=link, callback=self.detail)
 
         logging.log(logging.WARNING, "###All Courses###")
         logging.log(logging.WARNING,list_courses)
+
+    def detail(self, response):
+        title = response.xpath("//title/text()").extract()
+        print("Course Detail Title: ", title)
